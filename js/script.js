@@ -105,10 +105,15 @@ function initializeIBTracker() {
     `;
     document.querySelector('.ib-container').prepend(pointsContainer);
     
+    // Create container for all IB content
+    const ibContent = document.createElement('div');
+    ibContent.className = 'ib-content';
+    
     // Render Subject Cards
     const subjectsContainer = document.createElement('div');
     subjectsContainer.className = 'subjects-container';
     
+    // Render regular subjects
     ibSubjects.forEach(subject => {
         const subjectCard = document.createElement('div');
         subjectCard.className = 'subject-card';
@@ -121,9 +126,9 @@ function initializeIBTracker() {
             </div>
             <div class="subject-assignments">
                 ${assignments
-                    .filter(a => a.subject === subject.name || (a.subject === 'Core' && subject.name === 'Math AA'))
+                    .filter(a => a.subject === subject.name)
                     .map(a => `
-                        <div class="assignment ${a.completed ? 'completed' : ''}" 
+                        <div class="assignment" 
                              data-points="${a.points}">
                             ${a.name} (${a.points}pt${a.points > 1 ? 's' : ''})
                         </div>
@@ -133,7 +138,27 @@ function initializeIBTracker() {
         subjectsContainer.appendChild(subjectCard);
     });
     
-    document.querySelector('.ib-container').appendChild(subjectsContainer);
+    // Create Core assignments section (TOK/EE)
+    const coreContainer = document.createElement('div');
+    coreContainer.className = 'core-container';
+    coreContainer.innerHTML = `
+        <h3>Core Requirements</h3>
+        <div class="core-assignments">
+            ${assignments
+                .filter(a => a.subject === 'Core')
+                .map(a => `
+                    <div class="assignment" 
+                         data-points="${a.points}">
+                        ${a.name} (${a.points}pt${a.points > 1 ? 's' : ''})
+                    </div>
+                `).join('')}
+        </div>
+    `;
+    
+    // Add all containers to the IB content
+    ibContent.appendChild(subjectsContainer);
+    ibContent.appendChild(coreContainer);
+    document.querySelector('.ib-container').appendChild(ibContent);
     
     // Add event listeners
     document.querySelectorAll('.subject-points .point').forEach(point => {
@@ -158,7 +183,14 @@ function initializeIBTracker() {
         });
     });
     
-    document.querySelectorAll('.assignment').forEach(assignment => {
+    document.querySelectorAll('.subject-assignments .assignment').forEach(assignment => {
+        assignment.addEventListener('click', function() {
+            this.classList.toggle('completed');
+            updateIBPoints();
+        });
+    });
+    
+    document.querySelectorAll('.core-assignments .assignment').forEach(assignment => {
         assignment.addEventListener('click', function() {
             this.classList.toggle('completed');
             updateIBPoints();
@@ -181,34 +213,48 @@ function initializeIBTracker() {
 }
 
 function updateIBPoints() {
-    let totalPoints = 0;
+    let examPoints = 0;      // From final exams (70-80% of 42 = ~30 points)
+    let iaPoints = 0;        // From IAs/IOCs (20-30% of 42 = ~12 points)
     let subjectCount = 0;
     
-    // Calculate subject points (max 7 per subject, but scaled to fit into 42 total)
-    // Each subject contributes up to 5 points from final exams and 2 points from IAs
+    // Calculate points from subject grades (final exams)
     document.querySelectorAll('.subject-card').forEach(card => {
-        const points = parseInt(card.getAttribute('data-points') || '0');
-        if (!isNaN(points) && points > 0) {
-            // Scale the points: 1-7 to 0-7 (but in practice max 6-7)
-            // 1 = 1, 2 = 2, ..., 7 = 7
-            totalPoints += Math.min(points, 7);
+        const grade = parseInt(card.getAttribute('data-points') || '0');
+        if (!isNaN(grade) && grade > 0) {
+            // Scale the grade (1-7) to exam points (about 70% of subject weight)
+            // Each subject can contribute up to ~5 points from final exams (70% of 7)
+            examPoints += (grade / 7) * 5;
             subjectCount++;
         }
     });
     
-    // Scale total to fit into 42 points (7 subjects * 6 points)
-    // But since we're using actual IB grades, we'll just cap at 42
-    let scaledPoints = Math.min(totalPoints, 42);
+    // Calculate points from IAs/IOCs (about 30% of subject weight)
+    document.querySelectorAll('.assignment.completed').forEach(assignment => {
+        // IAs are worth 2 points each (scaled to fit 30% of 7 = ~2 points per subject)
+        const points = parseFloat(assignment.getAttribute('data-points') || '0');
+        if (assignment.closest('.subject-assignments')) {
+            // This is a subject IA/IOC (not TOK/EE)
+            iaPoints += points;
+        }
+    });
+    
+    // Cap IA points at 30% of 42 = ~12 points
+    iaPoints = Math.min(iaPoints, 12);
+    
+    // Calculate total subject points (exams + IAs, max 42)
+    let subjectTotal = Math.min(examPoints + iaPoints, 42);
     
     // Add TOK/EE points (3 points max)
     let tokEePoints = 0;
     document.querySelectorAll('.assignment.completed').forEach(assignment => {
-        const points = parseInt(assignment.getAttribute('data-points') || '0');
-        tokEePoints = Math.min(tokEePoints + points, 3); // Cap at 3 for TOK/EE
+        if (assignment.closest('.core-assignments')) {
+            const points = parseFloat(assignment.getAttribute('data-points') || '0');
+            tokEePoints = Math.min(tokEePoints + points, 3);
+        }
     });
     
     // Calculate final total (max 45)
-    const finalTotal = Math.min(scaledPoints + tokEePoints, 45);
+    const finalTotal = Math.min(Math.round(subjectTotal) + tokEePoints, 45);
     
     // Update display
     const pointsElement = document.getElementById('ib-total-points');
@@ -218,7 +264,7 @@ function updateIBPoints() {
         // Show breakdown in the UI
         const breakdownElement = document.getElementById('ib-points-breakdown');
         if (breakdownElement) {
-            breakdownElement.textContent = `(Subjects: ${scaledPoints}/42 + TOK/EE: ${tokEePoints}/3)`;
+            breakdownElement.textContent = `(Exams: ${Math.round(examPoints)} + IAs: ${Math.round(iaPoints)}/12 + TOK/EE: ${tokEePoints}/3)`;
         }
     }
     

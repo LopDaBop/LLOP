@@ -224,11 +224,28 @@ h1, h2, h3, h4 {
 /* Points Visualization */
 .ib-points {
     text-align: center;
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: rgba(40, 40, 70, 0.4);
+    margin: 2rem 0;
+}
+
+.ib-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.core-container {
+    background: rgba(40, 40, 70, 0.6);
     border-radius: 10px;
+    padding: 1.5rem;
     border: 1px solid var(--border-color);
+    margin-top: 1.5rem;
+}
+
+.core-container h3 {
+    color: var(--accent-color);
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
 }
 
 .ib-points h3 {
