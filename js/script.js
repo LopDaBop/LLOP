@@ -139,7 +139,20 @@ function initializeIBTracker() {
         point.addEventListener('click', function() {
             const points = parseInt(this.getAttribute('data-points'));
             const subjectCard = this.closest('.subject-card');
-            subjectCard.setAttribute('data-points', points);
+            const currentPoints = subjectCard.getAttribute('data-points');
+            
+            // Toggle selection - if clicking the same point, deselect it
+            if (currentPoints === this.getAttribute('data-points')) {
+                subjectCard.removeAttribute('data-points');
+                this.classList.remove('selected');
+            } else {
+                subjectCard.setAttribute('data-points', points);
+                // Remove selected class from all points in this subject
+                const allPoints = subjectCard.querySelectorAll('.subject-points .point');
+                allPoints.forEach(p => p.classList.remove('selected'));
+                // Add selected class to clicked point
+                this.classList.add('selected');
+            }
             updateIBPoints();
         });
     });
@@ -153,6 +166,17 @@ function initializeIBTracker() {
     
     // Initial update
     updateIBPoints();
+    
+    // Initialize selected points from data attributes
+    document.querySelectorAll('.subject-card').forEach(card => {
+        const points = card.getAttribute('data-points');
+        if (points) {
+            const pointElement = card.querySelector(`.subject-points .point[data-points="${points}"]`);
+            if (pointElement) {
+                pointElement.classList.add('selected');
+            }
+        }
+    });
 }
 
 function updateIBPoints() {

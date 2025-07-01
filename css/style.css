@@ -312,14 +312,16 @@ h1, h2, h3, h4 {
 }
 
 .subject-points .point:hover,
-.subject-points .point.active {
+.subject-points .point.selected {
     background-color: var(--accent-color);
     color: #000;
     transform: translateY(-2px);
 }
 
-.subject-points .point.active {
-    box-shadow: 0 0 15px var(--accent-color);
+.subject-points .point.selected {
+    background-color: #4caf50; /* Light green */
+    box-shadow: 0 0 15px #4caf50;
+    color: white;
 }
 
 .subject-assignments {
