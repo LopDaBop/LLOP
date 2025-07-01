@@ -56,6 +56,7 @@ a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .logo {
@@ -63,15 +64,80 @@ a:hover {
     font-weight: 800;
     color: var(--primary-color);
     text-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
+    text-decoration: none;
+    z-index: 1001;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    z-index: 1001;
+}
+
+.hamburger-box {
+    width: 30px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+}
+
+.hamburger-inner {
+    display: block;
+    top: 50%;
+    margin-top: -2px;
+}
+
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+    width: 30px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    position: absolute;
+    transition: transform 0.15s ease;
+}
+
+.hamburger-inner::before,
+.hamburger-inner::after {
+    content: '';
+    display: block;
+}
+
+.hamburger-inner::before {
+    top: -8px;
+}
+
+.hamburger-inner::after {
+    bottom: -8px;
+}
+
+/* Active state for hamburger */
+.hamburger.active .hamburger-inner {
+    transform: rotate(45deg);
+}
+
+.hamburger.active .hamburger-inner::before {
+    transform: translateY(8px) rotate(90deg);
+}
+
+.hamburger.active .hamburger-inner::after {
+    opacity: 0;
 }
 
 .nav-menu {
     display: flex;
     list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .nav-item {
-    margin-left: 2rem;
+    margin-left: 1.5rem;
 }
 
 .nav-link {
@@ -83,16 +149,19 @@ a:hover {
     padding: 0.5rem 1rem;
     border-radius: 4px;
     transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.nav-link i {
+    font-size: 1.1rem;
+    min-width: 20px;
+    text-align: center;
 }
 
 .nav-link:hover, .nav-link.active {
     background-color: rgba(0, 102, 255, 0.2);
     color: var(--secondary-color);
     box-shadow: 0 0 15px rgba(0, 102, 255, 0.3);
-}
-
-.nav-link i {
-    font-size: 1.1rem;
 }
 
 /* Main Content */
@@ -176,18 +245,214 @@ main {
     color: #00ff88;
 }
 
+/* Mobile Menu Styles */
+@media (max-width: 1024px) {
+    .hamburger {
+        display: block;
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: var(--background-dark);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 80px 2rem 2rem;
+        transition: right 0.3s ease-in-out;
+        z-index: 1000;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .nav-menu.active {
+        right: 0;
+    }
+    
+    .nav-item {
+        margin: 0.5rem 0;
+        width: 100%;
+    }
+    
+    .nav-link {
+        padding: 0.8rem 1rem;
+        width: 100%;
+        border-radius: 6px;
+    }
+    
+    .nav-link i {
+        width: 24px;
+        text-align: center;
+    }
+    
+    .nav-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        backdrop-filter: blur(3px);
+    }
+}
+
 /* Responsive adjustments */
-@media (max-width: 768px) {
-    .projects-grid {
-        grid-template-columns: 1fr;
+/* Base mobile styles */
+@media (max-width: 1024px) {
+    /* General adjustments */
+    body {
+        font-size: 16px;
+        -webkit-text-size-adjust: 100%;
+    }
+    
+    /* Navigation */
+    .nav-container {
+        padding: 0.8rem 1rem;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .nav-menu {
+        gap: 0.5rem;
+    }
+    
+    .nav-item {
+        margin-left: 0.8rem;
+    }
+    
+    .nav-link {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Main content */
+    main {
+        margin-top: 70px;
+        padding: 0 10px;
+    }
+    
+    /* Sections */
+    .section {
+        padding: 1.5rem 0.8rem;
+    }
+    
+    /* Timeline */
+    .timeline {
+        padding: 0 15px;
+    }
+    
+    .timeline-item {
+        flex-direction: column;
+        padding-left: 20px;
+    }
+    
+    .timeline-content {
+        width: 100%;
+        padding: 15px;
+    }
+    
+    .timeline-date {
+        width: 100%;
+        padding: 5px 0;
+        text-align: left;
+    }
+    
+    /* IB Tracker */
+    .ib-points {
+        padding: 1rem 0.8rem;
+    }
+    
+    .points-visualization {
+        margin: 1rem 0;
+    }
+    
+    .subject-card {
+        margin-bottom: 1rem;
+    }
+    
+    .points-selector {
+        gap: 0.3rem;
+    }
+    
+    .point-option {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+    }
+    
+    /* Business Section */
+    .business-container {
+        padding: 1rem 0.8rem;
     }
     
     .category-section {
+        padding: 1.2rem 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .project-card {
         padding: 1rem;
     }
     
-    .category-title {
-        font-size: 1.3rem;
+    /* Bank Section */
+    .money-display {
+        font-size: 2.5rem;
+        padding: 1.5rem 0;
+    }
+    
+    /* German Section */
+    .german-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .learning-method {
+        padding: 1.2rem;
+    }
+    
+    /* Adjustments for smaller screens */
+    @media (max-width: 480px) {
+        .nav-menu {
+            display: none; /* Consider adding a mobile menu toggle */
+        }
+        
+        .money-display {
+            font-size: 2rem;
+        }
+        
+        .category-title {
+            font-size: 1.3rem;
+        }
+        
+        .project-card h3 {
+            font-size: 1.1rem;
+        }
+        
+        .project-card p {
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* iPad specific adjustments */
+    @media (min-width: 768px) and (max-width: 1024px) {
+        .projects-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .german-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 }
 

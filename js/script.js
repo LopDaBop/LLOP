@@ -387,6 +387,55 @@ function initializeGermanLearning() {
     updateGermanProgress();
 }
 
+// Mobile menu toggle
+function initMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Toggle mobile menu
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        document.body.classList.toggle('nav-open');
+    });
+
+    // Close menu when clicking a link
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 1024) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.classList.remove('nav-open');
+            }
+        });
+    });
+
+    // Handle window resize
+    function handleResize() {
+        if (window.innerWidth > 1024) {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            document.body.classList.remove('nav-open');
+        }
+    }
+
+    window.addEventListener('resize', handleResize);
+}
+
+// Initialize sections
+function initSections() {
+    initializeIBTracker();
+    initializeBankSection();
+    initializeBusinessSection();
+    initializeTimeline();
+    initializeGermanLearning();
+    initMobileMenu();
+    
+    // Initialize active section
+    showSection('home');
+}
+
 // Initialize Bank Section
 function initializeBankSection() {
     const opportunities = [
@@ -466,6 +515,27 @@ function initializeBusinessSection() {
                 }
             ]
         },
+        progress: {
+            emoji: '🍯',
+            title: 'In Progress',
+            projects: [
+                {
+                    name: 'ib ias essays',
+                    description: 'IB Internal Assessment and Extended Essay services.',
+                    status: 'Active'
+                },
+                {
+                    name: 'ib unofficial groups',
+                    description: 'Community groups for IB students.',
+                    status: 'Active'
+                },
+                {
+                    name: 'ib clubideas [game dev club]',
+                    description: 'Game development club for IB students.',
+                    status: 'Planning'
+                }
+            ]
+        },
         iced: {
             emoji: '🧊',
             title: 'Iced',
@@ -494,27 +564,6 @@ function initializeBusinessSection() {
                     name: 'pro.J [Web] personal port',
                     description: 'Personal portfolio website.',
                     status: 'Active'
-                }
-            ]
-        },
-        progress: {
-            emoji: '🍯',
-            title: 'Progress',
-            projects: [
-                {
-                    name: 'ib ias essays',
-                    description: 'IB Internal Assessment and Extended Essay services.',
-                    status: 'Active'
-                },
-                {
-                    name: 'ib unofficial groups',
-                    description: 'Community groups for IB students.',
-                    status: 'Active'
-                },
-                {
-                    name: 'ib clubideas [game dev club]',
-                    description: 'Game development club for IB students.',
-                    status: 'Planning'
                 }
             ]
         }
