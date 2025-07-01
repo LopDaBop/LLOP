@@ -82,11 +82,11 @@ function initializeIBTracker() {
         { subject: 'Math AA', name: 'Math IA', points: 2, completed: false },
         { subject: 'Biology', name: 'Biology IA', points: 2, completed: false },
         { subject: 'Chemistry', name: 'Chemistry IA', points: 2, completed: false },
-        { subject: 'English', name: 'English IO', points: 1, completed: false },
-        { subject: 'German', name: 'German IO', points: 1, completed: false },
+        { subject: 'English', name: 'English IO', points: 2, completed: false },
+        { subject: 'German', name: 'German IO', points: 2, completed: false },
         { subject: 'Geography', name: 'Geography IA', points: 2, completed: false },
-        { subject: 'Core', name: 'TOK Essay', points: 1, completed: false },
-        { subject: 'Core', name: 'Extended Essay', points: 3, completed: false },
+        { subject: 'Core', name: 'TOK & EE', points: 3, completed: false },
+        { subject: 'Core', name: 'CAS', points: 1, completed: false }
     ];
     
     // Render IB Points Visualization
@@ -230,31 +230,33 @@ function updateIBPoints() {
     
     // Calculate points from IAs/IOCs (about 30% of subject weight)
     document.querySelectorAll('.assignment.completed').forEach(assignment => {
-        // IAs are worth 2 points each (scaled to fit 30% of 7 = ~2 points per subject)
         const points = parseFloat(assignment.getAttribute('data-points') || '0');
         if (assignment.closest('.subject-assignments')) {
-            // This is a subject IA/IOC (not TOK/EE)
+            // This is a subject IA/IO (worth 2 points each)
             iaPoints += points;
         }
     });
     
-    // Cap IA points at 30% of 42 = ~12 points
+    // Cap IA/IO points at 30% of 42 = ~12 points
     iaPoints = Math.min(iaPoints, 12);
     
     // Calculate total subject points (exams + IAs, max 42)
     let subjectTotal = Math.min(examPoints + iaPoints, 42);
     
-    // Add TOK/EE points (3 points max)
-    let tokEePoints = 0;
+    // Calculate core points (TOK/EE and CAS)
+    let corePoints = 0;
     document.querySelectorAll('.assignment.completed').forEach(assignment => {
         if (assignment.closest('.core-assignments')) {
             const points = parseFloat(assignment.getAttribute('data-points') || '0');
-            tokEePoints = Math.min(tokEePoints + points, 3);
+            // TOK & EE is worth 3 points, CAS is worth 1 point
+            corePoints += points;
+            // Cap core points at 3 (from TOK/EE) + 1 (from CAS) = 4
+            corePoints = Math.min(corePoints, 4);
         }
     });
     
     // Calculate final total (max 45)
-    const finalTotal = Math.min(Math.round(subjectTotal) + tokEePoints, 45);
+    const finalTotal = Math.min(Math.round(subjectTotal) + corePoints, 45);
     
     // Update display
     const pointsElement = document.getElementById('ib-total-points');
@@ -264,7 +266,18 @@ function updateIBPoints() {
         // Show breakdown in the UI
         const breakdownElement = document.getElementById('ib-points-breakdown');
         if (breakdownElement) {
-            breakdownElement.textContent = `(Exams: ${Math.round(examPoints)} + IAs: ${Math.round(iaPoints)}/12 + TOK/EE: ${tokEePoints}/3)`;
+            const tokEePoints = corePoints >= 3 ? 3 : corePoints; // TOK/EE is worth 3 points
+            const casPoints = corePoints > 3 ? 1 : 0; // CAS is worth 1 point if TOK/EE is completed
+            
+            breakdownElement.innerHTML = `
+                <br>
+                <span class="breakdown-details">
+                    Exams: ${Math.round(examPoints)} | 
+                    IAs/IOs: ${Math.round(iaPoints)}/12 | 
+                    TOK/EE: ${tokEePoints}/3 | 
+                    CAS: ${casPoints}/1
+                </span>
+            `;
         }
     }
     
