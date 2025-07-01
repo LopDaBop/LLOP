@@ -449,83 +449,112 @@ function initializeBankSection() {
 
 // Initialize Business Section
 function initializeBusinessSection() {
-    const projects = [
-        {
+    const categories = {
+        cooking: {
             emoji: '♨',
-            name: 'pro.J- UnfilteredReality',
-            description: 'A platform for authentic content and discussions.',
-            status: 'Planning'
+            title: 'Cooking',
+            projects: [
+                {
+                    name: 'pro.J- UnfilteredReality',
+                    description: 'A platform for authentic content and discussions.',
+                    status: 'Planning'
+                },
+                {
+                    name: 'pro.J- LLop [Spotify]',
+                    description: 'Music production and distribution on Spotify.',
+                    status: 'Active'
+                }
+            ]
         },
-        {
-            emoji: '♨',
-            name: 'pro.J- LLop [Spotify]',
-            description: 'Music production and distribution on Spotify.',
-            status: 'Active'
-        },
-        {
+        iced: {
             emoji: '🧊',
-            name: 'pro.J- LLop merch',
-            description: 'Merchandise line for LLop brand.',
-            status: 'Planning'
+            title: 'Iced',
+            projects: [
+                {
+                    name: 'pro.J- LLop merch',
+                    description: 'Merchandise line for LLop brand.',
+                    status: 'Planning'
+                },
+                {
+                    name: 'pro.J-Cinimatography [if god; YT]',
+                    description: 'YouTube channel for cinematography content.',
+                    status: 'Planning'
+                },
+                {
+                    name: 'pro.J Live',
+                    description: 'Live streaming and content creation.',
+                    status: 'Planning'
+                },
+                {
+                    name: 'pro.J [Web] Online shop',
+                    description: 'E-commerce platform for LLOP merchandise.',
+                    status: 'Planning'
+                },
+                {
+                    name: 'pro.J [Web] personal port',
+                    description: 'Personal portfolio website.',
+                    status: 'Active'
+                }
+            ]
         },
-        {
-            emoji: '🧊',
-            name: 'pro.J-Cinimatography [if god; YT]',
-            description: 'YouTube channel for cinematography content.',
-            status: 'Planning'
-        },
-        {
-            emoji: '🧊',
-            name: 'pro.J Live',
-            description: 'Live streaming and content creation.',
-            status: 'Planning'
-        },
-        {
+        progress: {
             emoji: '🍯',
-            name: 'ib ias essays',
-            description: 'IB Internal Assessment and Extended Essay services.',
-            status: 'Active'
-        },
-        {
-            emoji: '🍯',
-            name: 'ib unofficial groups',
-            description: 'Community groups for IB students.',
-            status: 'Active'
-        },
-        {
-            emoji: '🍯',
-            name: 'ib clubideas [game dev club]',
-            description: 'Game development club for IB students.',
-            status: 'Planning'
-        },
-        {
-            emoji: '🧊',
-            name: 'pro.J [Web] Online shop',
-            description: 'E-commerce platform for LLOP merchandise.',
-            status: 'Planning'
-        },
-        {
-            emoji: '🧊',
-            name: 'pro.J [Web] personal port',
-            description: 'Personal portfolio website.',
-            status: 'Active'
+            title: 'Progress',
+            projects: [
+                {
+                    name: 'ib ias essays',
+                    description: 'IB Internal Assessment and Extended Essay services.',
+                    status: 'Active'
+                },
+                {
+                    name: 'ib unofficial groups',
+                    description: 'Community groups for IB students.',
+                    status: 'Active'
+                },
+                {
+                    name: 'ib clubideas [game dev club]',
+                    description: 'Game development club for IB students.',
+                    status: 'Planning'
+                }
+            ]
         }
-    ];
+    };
     
-    // Render Projects
-    const projectsGrid = document.querySelector('.projects-grid');
-    if (projectsGrid) {
-        projects.forEach(project => {
+    // Render Categories
+    const businessContainer = document.querySelector('.business-container');
+    if (!businessContainer) return;
+    
+    // Clear existing content
+    businessContainer.innerHTML = '';
+    
+    // Create and append each category
+    Object.values(categories).forEach(category => {
+        const categorySection = document.createElement('div');
+        categorySection.className = 'category-section';
+        
+        const categoryTitle = document.createElement('h2');
+        categoryTitle.className = 'category-title';
+        categoryTitle.textContent = `${category.emoji} ${category.title}`;
+        
+        const projectsGrid = document.createElement('div');
+        projectsGrid.className = 'projects-grid';
+        
+        // Add projects to the grid
+        category.projects.forEach(project => {
             const projectCard = document.createElement('div');
             projectCard.className = 'project-card';
             projectCard.innerHTML = `
-                <h3>${project.emoji} ${project.name}</h3>
+                <h3>${project.name}</h3>
                 <p>${project.description}</p>
                 <span class="project-status">${project.status}</span>
             `;
             projectsGrid.appendChild(projectCard);
         });
-    }
+        
+        categorySection.appendChild(categoryTitle);
+        categorySection.appendChild(projectsGrid);
+        businessContainer.appendChild(categorySection);
+    });
 }
 
 // Initialize Timeline Animation
