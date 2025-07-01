@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLOP - My Journey</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">LLOP</div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#ib-tracker" class="nav-link"><i class="fas fa-graduation-cap"></i> IB Tracker</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#german" class="nav-link"><i class="fas fa-language"></i> German</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#bank" class="nav-link"><i class="fas fa-piggy-bank"></i> Bank</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#business" class="nav-link"><i class="fas fa-briefcase"></i> Business</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="timeline-container">
+                <h1>My Journey Timeline</h1>
+                <div class="timeline">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-milestones">
+                        <div class="milestone" data-date="JUL 2025"></div>
+                        <div class="milestone" data-date="SEP 2025">
+                            <div class="milestone-content left">
+                                <h3>11DP Start</h3>
+                                <p>Beginning of IB Diploma Program</p>
+                            </div>
+                        </div>
+                        <div class="milestone" data-date="JUN 2026"></div>
+                        <div class="milestone" data-date="SEP 2026">
+                            <div class="milestone-content right">
+                                <h3>12DP Start</h3>
+                                <p>Final year of IB</p>
+                            </div>
+                        </div>
+                        <div class="milestone" data-date="JUN 2027"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IB Tracker Section -->
+        <section id="ib-tracker" class="section">
+            <h1>IB Tracker</h1>
+            <div class="ib-container">
+                <div class="ib-goal">
+                    <h2>Goal: 38+ IB Points</h2>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="ib-progress"></div>
+                    </div>
+                </div>
+                
+                <div class="grades-section">
+                    <h3>Subject Grades</h3>
+                    <div class="grades-grid">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="assignments-section">
+                    <h3>Assignments</h3>
+                    <div class="checklist" id="ia-checklist">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- German Section -->
+        <section id="german" class="section">
+            <h1>German Learning Journey</h1>
+            <div class="german-container">
+                <div class="level-display">
+                    <div class="level-progress">
+                        <div class="level-circle">
+                            <span>B1</span>
+                            <div class="level-progress-bar"></div>
+                        </div>
+                        <div class="level-info">
+                            <h3>Current Level: B1</h3>
+                            <p>Goal: C1 by June 2027</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="requirements">
+                    <h3>Level Requirements</h3>
+                    <div class="level-requirements">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="learning-methods">
+                    <h3>Learning Methods</h3>
+                    <div class="method-grid">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bank Section -->
+        <section id="bank" class="section">
+            <h1>Freelance Opportunities</h1>
+            <div class="bank-container">
+                <div class="money-display">
+                    <div class="money-circle">
+                        <span class="euro-symbol">€</span>
+                        <div class="amount">N/A</div>
+                    </div>
+                </div>
+                
+                <div class="opportunities-grid">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Business Section -->
+        <section id="business" class="section">
+            <h1>Business Projects</h1>
+            <div class="business-container">
+                <div class="projects-grid">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
