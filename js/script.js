@@ -93,7 +93,7 @@ function initializeIBTracker() {
     const pointsContainer = document.createElement('div');
     pointsContainer.className = 'ib-points';
     pointsContainer.innerHTML = `
-        <h3>IB Points: <span id="ib-total-points">0</span>/45</h3>
+        <h3>IB Points: <span id="ib-total-points">0</span>/45 <span id="ib-points-breakdown" class="points-breakdown"></span></h3>
         <div class="points-visualization">
             ${Array(45).fill('<div class="point"></div>').join('')}
         </div>
@@ -101,6 +101,7 @@ function initializeIBTracker() {
             <span>0</span>
             <span>45</span>
         </div>
+        <p class="points-note">Note: 42 points from subjects + 3 points from TOK/EE</p>
     `;
     document.querySelector('.ib-container').prepend(pointsContainer);
     
@@ -181,28 +182,49 @@ function initializeIBTracker() {
 
 function updateIBPoints() {
     let totalPoints = 0;
+    let subjectCount = 0;
     
-    // Add subject points
+    // Calculate subject points (max 7 per subject, but scaled to fit into 42 total)
+    // Each subject contributes up to 5 points from final exams and 2 points from IAs
     document.querySelectorAll('.subject-card').forEach(card => {
         const points = parseInt(card.getAttribute('data-points') || '0');
-        totalPoints += points;
+        if (!isNaN(points) && points > 0) {
+            // Scale the points: 1-7 to 0-7 (but in practice max 6-7)
+            // 1 = 1, 2 = 2, ..., 7 = 7
+            totalPoints += Math.min(points, 7);
+            subjectCount++;
+        }
     });
     
-    // Add assignment points
+    // Scale total to fit into 42 points (7 subjects * 6 points)
+    // But since we're using actual IB grades, we'll just cap at 42
+    let scaledPoints = Math.min(totalPoints, 42);
+    
+    // Add TOK/EE points (3 points max)
+    let tokEePoints = 0;
     document.querySelectorAll('.assignment.completed').forEach(assignment => {
         const points = parseInt(assignment.getAttribute('data-points') || '0');
-        totalPoints += points;
+        tokEePoints = Math.min(tokEePoints + points, 3); // Cap at 3 for TOK/EE
     });
+    
+    // Calculate final total (max 45)
+    const finalTotal = Math.min(scaledPoints + tokEePoints, 45);
     
     // Update display
     const pointsElement = document.getElementById('ib-total-points');
     if (pointsElement) {
-        pointsElement.textContent = totalPoints;
+        pointsElement.textContent = finalTotal;
+        
+        // Show breakdown in the UI
+        const breakdownElement = document.getElementById('ib-points-breakdown');
+        if (breakdownElement) {
+            breakdownElement.textContent = `(Subjects: ${scaledPoints}/42 + TOK/EE: ${tokEePoints}/3)`;
+        }
     }
     
     // Update points visualization
     document.querySelectorAll('.points-visualization .point').forEach((point, index) => {
-        point.classList.toggle('earned', index < totalPoints);
+        point.classList.toggle('earned', index < finalTotal);
     });
 }
 
