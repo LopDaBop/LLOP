@@ -70,59 +70,116 @@ window.addEventListener('DOMContentLoaded', () => {
 // Initialize IB Tracker
 function initializeIBTracker() {
     const ibSubjects = [
-        { name: 'English A: Lang & Lit HL', target: 6, current: 5 },
-        { name: 'German B HL', target: 6, current: 5 },
-        { name: 'Business Management HL', target: 6, current: 5 },
-        { name: 'Physics SL', target: 5, current: 4 },
-        { name: 'Math AI SL', target: 5, current: 4 },
-        { name: 'ESS SL', target: 5, current: 4 },
+        { name: 'Math AA', level: 'HL', points: 7 },
+        { name: 'Biology', level: 'HL', points: 7 },
+        { name: 'Chemistry', level: 'HL', points: 7 },
+        { name: 'English', level: 'SL', points: 7 },
+        { name: 'German', level: 'SL', points: 7 },
+        { name: 'Geography', level: 'SL', points: 7 },
     ];
     
-    const iaChecklist = [
-        { name: 'English A: Lang & Lit IO', completed: false },
-        { name: 'German B IO', completed: false },
-        { name: 'Business Management IA', completed: false },
-        { name: 'Physics IA', completed: false },
-        { name: 'Math AI IA', completed: false },
-        { name: 'ESS IA', completed: false },
-        { name: 'TOK Essay', completed: false },
-        { name: 'Extended Essay', completed: false },
+    const assignments = [
+        { subject: 'Math AA', name: 'Math IA', points: 2, completed: false },
+        { subject: 'Biology', name: 'Biology IA', points: 2, completed: false },
+        { subject: 'Chemistry', name: 'Chemistry IA', points: 2, completed: false },
+        { subject: 'English', name: 'English IO', points: 1, completed: false },
+        { subject: 'German', name: 'German IO', points: 1, completed: false },
+        { subject: 'Geography', name: 'Geography IA', points: 2, completed: false },
+        { subject: 'Core', name: 'TOK Essay', points: 1, completed: false },
+        { subject: 'Core', name: 'Extended Essay', points: 3, completed: false },
     ];
     
-    // Render IB Grades
-    const gradesGrid = document.querySelector('.grades-grid');
-    if (gradesGrid) {
-        ibSubjects.forEach(subject => {
-            const progress = (subject.current / subject.target) * 100;
-            const gradeItem = document.createElement('div');
-            gradeItem.className = 'grade-card';
-            gradeItem.innerHTML = `
-                <h4>${subject.name}</h4>
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: ${progress}%"></div>
-                </div>
-                <p>Current: ${subject.current} / ${subject.target}</p>
-            `;
-            gradesGrid.appendChild(gradeItem);
+    // Render IB Points Visualization
+    const pointsContainer = document.createElement('div');
+    pointsContainer.className = 'ib-points';
+    pointsContainer.innerHTML = `
+        <h3>IB Points: <span id="ib-total-points">0</span>/45</h3>
+        <div class="points-visualization">
+            ${Array(45).fill('<div class="point"></div>').join('')}
+        </div>
+        <div class="points-labels">
+            <span>0</span>
+            <span>45</span>
+        </div>
+    `;
+    document.querySelector('.ib-container').prepend(pointsContainer);
+    
+    // Render Subject Cards
+    const subjectsContainer = document.createElement('div');
+    subjectsContainer.className = 'subjects-container';
+    
+    ibSubjects.forEach(subject => {
+        const subjectCard = document.createElement('div');
+        subjectCard.className = 'subject-card';
+        subjectCard.innerHTML = `
+            <h4>${subject.name} ${subject.level}</h4>
+            <div class="subject-points">
+                ${Array(7).fill(0).map((_, i) => 
+                    `<span class="point" data-points="${i+1}">${i+1}</span>`
+                ).join('')}
+            </div>
+            <div class="subject-assignments">
+                ${assignments
+                    .filter(a => a.subject === subject.name || (a.subject === 'Core' && subject.name === 'Math AA'))
+                    .map(a => `
+                        <div class="assignment ${a.completed ? 'completed' : ''}" 
+                             data-points="${a.points}">
+                            ${a.name} (${a.points}pt${a.points > 1 ? 's' : ''})
+                        </div>
+                    `).join('')}
+            </div>
+        `;
+        subjectsContainer.appendChild(subjectCard);
+    });
+    
+    document.querySelector('.ib-container').appendChild(subjectsContainer);
+    
+    // Add event listeners
+    document.querySelectorAll('.subject-points .point').forEach(point => {
+        point.addEventListener('click', function() {
+            const points = parseInt(this.getAttribute('data-points'));
+            const subjectCard = this.closest('.subject-card');
+            subjectCard.setAttribute('data-points', points);
+            updateIBPoints();
         });
+    });
+    
+    document.querySelectorAll('.assignment').forEach(assignment => {
+        assignment.addEventListener('click', function() {
+            this.classList.toggle('completed');
+            updateIBPoints();
+        });
+    });
+    
+    // Initial update
+    updateIBPoints();
+}
+
+function updateIBPoints() {
+    let totalPoints = 0;
+    
+    // Add subject points
+    document.querySelectorAll('.subject-card').forEach(card => {
+        const points = parseInt(card.getAttribute('data-points') || '0');
+        totalPoints += points;
+    });
+    
+    // Add assignment points
+    document.querySelectorAll('.assignment.completed').forEach(assignment => {
+        const points = parseInt(assignment.getAttribute('data-points') || '0');
+        totalPoints += points;
+    });
+    
+    // Update display
+    const pointsElement = document.getElementById('ib-total-points');
+    if (pointsElement) {
+        pointsElement.textContent = totalPoints;
     }
     
-    // Render IA Checklist
-    const iaChecklistContainer = document.querySelector('#ia-checklist');
-    if (iaChecklistContainer) {
-        iaChecklist.forEach((item, index) => {
-            const checklistItem = document.createElement('div');
-            checklistItem.className = 'checklist-item';
-            checklistItem.innerHTML = `
-                <input type="checkbox" id="ia-${index}" ${item.completed ? 'checked' : ''}>
-                <label for="ia-${index}">${item.name}</label>
-            `;
-            iaChecklistContainer.appendChild(checklistItem);
-        });
-    }
-    
-    // Calculate and update overall progress
-    updateIBProgress();
+    // Update points visualization
+    document.querySelectorAll('.points-visualization .point').forEach((point, index) => {
+        point.classList.toggle('earned', index < totalPoints);
+    });
 }
 
 // Initialize German Learning Section
