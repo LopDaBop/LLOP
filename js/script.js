@@ -1,55 +1,104 @@
+// Debug: Check if script is loaded
+console.log('Script loaded successfully');
+
 // DOM Elements
-const menuToggle = document.querySelector('.menu-toggle');
-const navMenu = document.querySelector('.nav-menu');
+const menuToggle = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav');
 const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('.section');
+const sections = document.querySelectorAll('section[id]');
+const menuOverlay = document.querySelector('.menu-overlay');
 
-// Mobile menu toggle
-menuToggle?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    menuToggle.classList.toggle('active');
-    navMenu.classList.toggle('active');
-    document.body.classList.toggle('menu-open');
-    
-    // Toggle aria-expanded for accessibility
-    const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
-    menuToggle.setAttribute('aria-expanded', !isExpanded);
-    
-    // Toggle aria-hidden on the navigation
-    navMenu.setAttribute('aria-hidden', isExpanded);
-});
+// Debug: Log elements
+console.log('Menu Toggle:', menuToggle);
+console.log('Nav Menu:', navMenu);
+console.log('Nav Links:', navLinks);
 
-// Close mobile menu when clicking outside
-const closeMenu = () => {
-    if (navMenu.classList.contains('active')) {
+// Initialize mobile menu state
+function initMobileMenu() {
+    // Set initial ARIA attributes
+    if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-controls', 'main-navigation');
+        menuToggle.setAttribute('aria-label', 'Toggle menu');
+    }
+    
+    if (navMenu) {
+        navMenu.setAttribute('aria-hidden', 'true');
+    }
+}
+
+// Toggle mobile menu
+function toggleMenu(e) {
+    if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+    
+    console.log('Toggle menu clicked');
+    
+    if (menuToggle && navMenu) {
+        const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+        const newState = !isExpanded;
+        
+        console.log('Current state:', isExpanded ? 'expanded' : 'collapsed');
+        
+        // Toggle classes
+        menuToggle.classList.toggle('active', newState);
+        navMenu.classList.toggle('active', newState);
+        document.body.classList.toggle('menu-open', newState);
+        
+        // Update ARIA attributes
+        menuToggle.setAttribute('aria-expanded', newState);
+        navMenu.setAttribute('aria-hidden', !newState);
+        
+        console.log('New state:', newState ? 'expanded' : 'collapsed');
+        
+        // Toggle overlay
+        if (menuOverlay) {
+            menuOverlay.style.display = newState ? 'block' : 'none';
+        }
+    }
+}
+
+// Close mobile menu
+function closeMenu() {
+    if (menuToggle && navMenu && navMenu.classList.contains('active')) {
         menuToggle.classList.remove('active');
         navMenu.classList.remove('active');
         document.body.classList.remove('menu-open');
         menuToggle.setAttribute('aria-expanded', 'false');
         navMenu.setAttribute('aria-hidden', 'true');
     }
-};
+}
 
-// Close menu when clicking on a link
-navLinks.forEach(link => {
-    link.addEventListener('click', closeMenu);
-});
-
-// Close menu when clicking outside
-window.addEventListener('click', (e) => {
-    if (navMenu.classList.contains('active') && 
-        !e.target.closest('.nav-menu') && 
-        !e.target.closest('.hamburger')) {
-        closeMenu();
-    }
-});
-
-// Close menu on escape key
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-        closeMenu();
-    }
-});
+// Initialize mobile menu
+if (menuToggle) {
+    initMobileMenu();
+    
+    // Toggle menu on hamburger click
+    menuToggle.addEventListener('click', toggleMenu);
+    
+    // Close menu when clicking on a link
+    navLinks.forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (navMenu.classList.contains('active') && 
+            !e.target.closest('.nav') && 
+            !e.target.closest('.hamburger')) {
+            closeMenu();
+        }
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+}
 
 // Smooth scrolling for navigation
 navLinks.forEach(link => {
