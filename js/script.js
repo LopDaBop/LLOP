@@ -5,19 +5,50 @@ const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('.section');
 
 // Mobile menu toggle
-menuToggle?.addEventListener('click', () => {
+menuToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
     menuToggle.classList.toggle('active');
     navMenu.classList.toggle('active');
+    document.body.classList.toggle('menu-open');
+    
+    // Toggle aria-expanded for accessibility
+    const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+    menuToggle.setAttribute('aria-expanded', !isExpanded);
+    
+    // Toggle aria-hidden on the navigation
+    navMenu.setAttribute('aria-hidden', isExpanded);
 });
 
-// Close mobile menu when clicking a link
+// Close mobile menu when clicking outside
+const closeMenu = () => {
+    if (navMenu.classList.contains('active')) {
+        menuToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        navMenu.setAttribute('aria-hidden', 'true');
+    }
+};
+
+// Close menu when clicking on a link
 navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        if (navMenu.classList.contains('active')) {
-            menuToggle.classList.remove('active');
-            navMenu.classList.remove('active');
-        }
-    });
+    link.addEventListener('click', closeMenu);
+});
+
+// Close menu when clicking outside
+window.addEventListener('click', (e) => {
+    if (navMenu.classList.contains('active') && 
+        !e.target.closest('.nav-menu') && 
+        !e.target.closest('.hamburger')) {
+        closeMenu();
+    }
+});
+
+// Close menu on escape key
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+        closeMenu();
+    }
 });
 
 // Smooth scrolling for navigation
@@ -324,7 +355,7 @@ function initializeSpanishLearning() {
         {
             title: 'Daily Practice',
             icon: 'fa-calendar-day',
-            description: 'Dedicate at least 30 minutes daily to Spanish practice.'
+            description: 'Dedicate at least 30 minutes daily to German practice.'
         },
         {
             title: 'Language Apps',
@@ -334,7 +365,7 @@ function initializeSpanishLearning() {
         {
             title: 'Immersion',
             icon: 'fa-globe-europe',
-            description: 'Watch Spanish movies, listen to Spanish music, and read Spanish books.'
+            description: 'Watch German movies, listen to German music, and read German books.'
         },
         {
             title: 'Conversation Practice',
@@ -344,12 +375,12 @@ function initializeSpanishLearning() {
         {
             title: 'Grammar Study',
             icon: 'fa-book',
-            description: 'Regularly study and practice Spanish grammar rules.'
+            description: 'Regularly study and practice German grammar rules.'
         },
         {
             title: 'Writing Practice',
             icon: 'fa-pen-fancy',
-            description: 'Write daily journal entries or short stories in Spanish.'
+            description: 'Write daily journal entries or short stories in German.'
         }
     ];
     
