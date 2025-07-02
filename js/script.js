@@ -54,8 +54,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // Initialize IB Tracker
     initializeIBTracker();
     
-    // Initialize German Learning
-    initializeGermanLearning();
+    // Initialize Spanish [Ab Initio] Learning
+    initializeSpanishLearning();
     
     // Initialize Bank Section
     initializeBankSection();
@@ -74,7 +74,7 @@ function initializeIBTracker() {
         { name: 'Biology', level: 'HL', points: 7 },
         { name: 'Chemistry', level: 'HL', points: 7 },
         { name: 'English', level: 'SL', points: 7 },
-        { name: 'German', level: 'SL', points: 7 },
+        { name: 'Spanish [Ab Initio]', level: 'SL', points: 7 },
         { name: 'Geography', level: 'SL', points: 7 },
     ];
     
@@ -83,7 +83,7 @@ function initializeIBTracker() {
         { subject: 'Biology', name: 'Biology IA', points: 2, completed: false },
         { subject: 'Chemistry', name: 'Chemistry IA', points: 2, completed: false },
         { subject: 'English', name: 'English IO', points: 2, completed: false },
-        { subject: 'German', name: 'German IO', points: 2, completed: false },
+        { subject: 'Spanish [Ab Initio]', name: 'Spanish [Ab Initio] IO', points: 2, completed: false },
         { subject: 'Geography', name: 'Geography IA', points: 2, completed: false },
         { subject: 'Core', name: 'TOK & EE', points: 3, completed: false }
     ];
@@ -285,8 +285,8 @@ function updateIBPoints() {
     });
 }
 
-// Initialize German Learning Section
-function initializeGermanLearning() {
+// Initialize Spanish [Ab Initio] Learning Section
+function initializeSpanishLearning() {
     const cefrLevels = [
         {
             level: 'A1',
@@ -324,7 +324,7 @@ function initializeGermanLearning() {
         {
             title: 'Daily Practice',
             icon: 'fa-calendar-day',
-            description: 'Dedicate at least 30 minutes daily to German practice.'
+            description: 'Dedicate at least 30 minutes daily to Spanish practice.'
         },
         {
             title: 'Language Apps',
@@ -334,7 +334,7 @@ function initializeGermanLearning() {
         {
             title: 'Immersion',
             icon: 'fa-globe-europe',
-            description: 'Watch German movies, listen to German music, and read German books.'
+            description: 'Watch Spanish movies, listen to Spanish music, and read Spanish books.'
         },
         {
             title: 'Conversation Practice',
@@ -344,12 +344,12 @@ function initializeGermanLearning() {
         {
             title: 'Grammar Study',
             icon: 'fa-book',
-            description: 'Regularly study and practice German grammar rules.'
+            description: 'Regularly study and practice Spanish grammar rules.'
         },
         {
             title: 'Writing Practice',
             icon: 'fa-pen-fancy',
-            description: 'Write daily journal entries or short stories in German.'
+            description: 'Write daily journal entries or short stories in Spanish.'
         }
     ];
     
@@ -382,7 +382,7 @@ function initializeGermanLearning() {
     }
     
     // Set up level progress
-    updateGermanProgress();
+    updateSpanishProgress();
 }
 
 // Mobile menu toggle
@@ -724,7 +724,7 @@ function updateIBProgress() {
 }
 
 // Update German Learning Progress
-function updateGermanProgress() {
+function updateSpanishProgress() {
     const currentLevel = 'B1';
     const targetLevel = 'C1';
     const progress = 40; // 40% towards C1 from B1
