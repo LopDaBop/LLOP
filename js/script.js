@@ -273,8 +273,7 @@ function updateIBPoints() {
                 <span class="breakdown-details">
                     Exams: ${Math.round(examPoints)} | 
                     IAs/IOs: ${Math.round(iaPoints)}/12 | 
-                    TOK/EE: ${tokEePoints}/3 | 
-                    CAS: ${casPoints}/1
+                    TOK/EE: ${tokEePoints}/3
                 </span>
             `;
         }
