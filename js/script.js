@@ -391,87 +391,84 @@ function initMobileMenu() {
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
     const html = document.documentElement;
+    let isMenuOpen = false;
 
     // Make sure elements exist
     if (!hamburger || !navMenu) return;
 
     // Toggle mobile menu with better touch handling
     function toggleMenu() {
-        const isActive = hamburger.classList.contains('active');
+        isMenuOpen = !isMenuOpen;
         
         // Toggle classes
-        hamburger.classList.toggle('active', !isActive);
-        navMenu.classList.toggle('active', !isActive);
+        hamburger.classList.toggle('active', isMenuOpen);
+        navMenu.classList.toggle('active', isMenuOpen);
         
-        // Toggle body classes for overlay and scroll lock
-        if (!isActive) {
-            html.classList.add('nav-open', 'nav-menu-active');
+        // Toggle body scroll lock
+        if (isMenuOpen) {
+            html.classList.add('nav-open');
             document.body.style.overflow = 'hidden';
-        } else {
-            html.classList.remove('nav-open', 'nav-menu-active');
-            document.body.style.overflow = '';
-        }
-        
-        // Prevent body scroll on iOS
-        if (!isActive) {
+            // Prevent background scrolling on iOS
             document.body.style.position = 'fixed';
             document.body.style.width = '100%';
         } else {
+            html.classList.remove('nav-open');
+            document.body.style.overflow = '';
             document.body.style.position = '';
             document.body.style.width = '';
         }
     }
 
     // Better touch handling for hamburger button
-    const handleHamburgerClick = (e) => {
+    function handleHamburgerClick(e) {
         e.preventDefault();
         e.stopPropagation();
         toggleMenu();
-    };
+    }
 
     // Close menu when clicking outside
-    const handleDocumentClick = (e) => {
-        if (hamburger.classList.contains('active') && 
+    function handleDocumentClick(e) {
+        if (isMenuOpen && 
             !e.target.closest('.nav-menu') && 
             !e.target.closest('.hamburger')) {
             toggleMenu();
         }
-    };
+    }
 
     // Close menu when clicking a link
-    const handleLinkClick = () => {
+    function handleLinkClick() {
         if (window.innerWidth <= 1024) {
             toggleMenu();
         }
-    };
+    }
 
     // Handle window resize and orientation changes
     let resizeTimer;
-    const handleResize = () => {
+    function handleResize() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-            if (window.innerWidth > 1024) {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-                html.classList.remove('nav-open', 'nav-menu-active');
-                document.body.style.overflow = '';
-                document.body.style.position = '';
-                document.body.style.width = '';
+            if (window.innerWidth > 1024 && isMenuOpen) {
+                toggleMenu();
             }
         }, 250);
-    };
+    }
 
-    // Add event listeners
-    hamburger.addEventListener('click', handleHamburgerClick, { passive: false });
-    document.addEventListener('click', handleDocumentClick, { passive: false });
-    navLinks.forEach(link => {
-        link.addEventListener('click', handleLinkClick, { passive: true });
-    });
-    window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('orientationchange', handleResize, { passive: true });
+    // Add event listeners with passive where appropriate
+    function addEventListeners() {
+        hamburger.addEventListener('click', handleHamburgerClick, { passive: false });
+        document.addEventListener('click', handleDocumentClick, { passive: false });
+        navLinks.forEach(link => {
+            link.addEventListener('click', handleLinkClick, { passive: true });
+        });
+        window.addEventListener('resize', handleResize, { passive: true });
+        window.addEventListener('orientationchange', handleResize, { passive: true });
+    }
+
+    // Initialize
+    addEventListeners();
     
-    // Cleanup function to remove event listeners if needed
-    return () => {
+    // Cleanup function to remove event listeners
+    return function cleanup() {
         hamburger.removeEventListener('click', handleHamburgerClick);
         document.removeEventListener('click', handleDocumentClick);
         navLinks.forEach(link => {
