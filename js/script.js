@@ -85,8 +85,7 @@ function initializeIBTracker() {
         { subject: 'English', name: 'English IO', points: 2, completed: false },
         { subject: 'German', name: 'German IO', points: 2, completed: false },
         { subject: 'Geography', name: 'Geography IA', points: 2, completed: false },
-        { subject: 'Core', name: 'TOK & EE', points: 3, completed: false },
-        { subject: 'Core', name: 'CAS', points: 1, completed: false }
+        { subject: 'Core', name: 'TOK & EE', points: 3, completed: false }
     ];
     
     // Render IB Points Visualization
@@ -392,35 +391,96 @@ function initMobileMenu() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
+    const html = document.documentElement;
 
-    // Toggle mobile menu
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.classList.toggle('nav-open');
-    });
+    // Make sure elements exist
+    if (!hamburger || !navMenu) return;
 
-    // Close menu when clicking a link
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 1024) {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-                document.body.classList.remove('nav-open');
-            }
-        });
-    });
-
-    // Handle window resize
-    function handleResize() {
-        if (window.innerWidth > 1024) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            document.body.classList.remove('nav-open');
+    // Toggle mobile menu with better touch handling
+    function toggleMenu() {
+        const isActive = hamburger.classList.contains('active');
+        
+        // Toggle classes
+        hamburger.classList.toggle('active', !isActive);
+        navMenu.classList.toggle('active', !isActive);
+        
+        // Toggle body classes for overlay and scroll lock
+        if (!isActive) {
+            html.classList.add('nav-open', 'nav-menu-active');
+            document.body.style.overflow = 'hidden';
+        } else {
+            html.classList.remove('nav-open', 'nav-menu-active');
+            document.body.style.overflow = '';
+        }
+        
+        // Prevent body scroll on iOS
+        if (!isActive) {
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+        } else {
+            document.body.style.position = '';
+            document.body.style.width = '';
         }
     }
 
-    window.addEventListener('resize', handleResize);
+    // Better touch handling for hamburger button
+    const handleHamburgerClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMenu();
+    };
+
+    // Close menu when clicking outside
+    const handleDocumentClick = (e) => {
+        if (hamburger.classList.contains('active') && 
+            !e.target.closest('.nav-menu') && 
+            !e.target.closest('.hamburger')) {
+            toggleMenu();
+        }
+    };
+
+    // Close menu when clicking a link
+    const handleLinkClick = () => {
+        if (window.innerWidth <= 1024) {
+            toggleMenu();
+        }
+    };
+
+    // Handle window resize and orientation changes
+    let resizeTimer;
+    const handleResize = () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (window.innerWidth > 1024) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                html.classList.remove('nav-open', 'nav-menu-active');
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+            }
+        }, 250);
+    };
+
+    // Add event listeners
+    hamburger.addEventListener('click', handleHamburgerClick, { passive: false });
+    document.addEventListener('click', handleDocumentClick, { passive: false });
+    navLinks.forEach(link => {
+        link.addEventListener('click', handleLinkClick, { passive: true });
+    });
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('orientationchange', handleResize, { passive: true });
+    
+    // Cleanup function to remove event listeners if needed
+    return () => {
+        hamburger.removeEventListener('click', handleHamburgerClick);
+        document.removeEventListener('click', handleDocumentClick);
+        navLinks.forEach(link => {
+            link.removeEventListener('click', handleLinkClick);
+        });
+        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('orientationchange', handleResize);
+    };
 }
 
 // Initialize sections

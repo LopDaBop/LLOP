@@ -12,18 +12,46 @@
     <nav class="main-nav">
         <div class="nav-container">
             <a href="#" class="logo">LLOP</a>
-            <button class="hamburger" aria-label="Menu">
+            <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-navigation">
                 <span class="hamburger-box">
                     <span class="hamburger-inner"></span>
                 </span>
             </button>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="#home" class="nav-link active" data-section="home"><i class="fas fa-home"></i> Home</a></li>
-                <li class="nav-item"><a href="#ib-tracker" class="nav-link" data-section="ib"><i class="fas fa-graduation-cap"></i> IB Tracker</a></li>
-                <li class="nav-item"><a href="#german" class="nav-link" data-section="german"><i class="fas fa-language"></i> German</a></li>
-                <li class="nav-item"><a href="#bank" class="nav-link" data-section="bank"><i class="fas fa-piggy-bank"></i> Bank</a></li>
-                <li class="nav-item"><a href="#business" class="nav-link" data-section="business"><i class="fas fa-briefcase"></i> Business</a></li>
-            </ul>
+            <nav class="nav">
+                <!-- Navigation Menu -->
+                <ul class="nav-menu" id="main-navigation" role="navigation" aria-label="Main navigation">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link active" data-section="home">
+                            <i class="fas fa-home" aria-hidden="true"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#ib-tracker" class="nav-link" data-section="ib-tracker">
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                            <span>IB Tracker</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#german" class="nav-link" data-section="german">
+                            <i class="fas fa-language" aria-hidden="true"></i>
+                            <span>German</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#bank" class="nav-link" data-section="bank">
+                            <i class="fas fa-piggy-bank" aria-hidden="true"></i>
+                            <span>Bank</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#business" class="nav-link" data-section="business">
+                            <i class="fas fa-briefcase" aria-hidden="true"></i>
+                            <span>Business</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </nav>
 
