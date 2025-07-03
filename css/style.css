@@ -1136,7 +1136,13 @@ h1, h2, h3, h4 {
 .milestone:nth-child(odd) {
     left: 0;
     padding-right: 3rem;
-    text-align: right;
+    text-align: left;
+}
+
+.milestone:nth-child(odd) .milestone-content {
+    text-align: left;
+    margin-right: 0;
+    margin-left: auto;
 }
 
 .milestone:nth-child(even) {
