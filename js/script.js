@@ -585,8 +585,28 @@ function initMobileMenu() {
     };
 }
 
+// Show a specific section and hide others
+function showSection(sectionId) {
+    // Hide all sections first
+    document.querySelectorAll('section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show the selected section
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.classList.add('active');
+    }
+    
+    // Update active nav link
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
+    });
+}
+
 // Initialize sections
 function initSections() {
+    // Initialize all sections
     initializeIBTracker();
     initializeBankSection();
     initializeBusinessSection();
@@ -594,8 +614,20 @@ function initSections() {
     initializeGermanLearning();
     initMobileMenu();
     
-    // Initialize active section
+    // Show home section by default
     showSection('home');
+    
+    // Set up navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = link.getAttribute('data-section');
+            if (sectionId) {
+                showSection(sectionId);
+                closeMenu();
+            }
+        });
+    });
 }
 
 // Initialize Bank Section
@@ -776,39 +808,165 @@ function initializeTimeline() {
     const timelineLine = document.querySelector('.timeline-line');
     const milestones = document.querySelectorAll('.milestone');
     
-    // Set initial state
+    // Make sure timeline is visible
+    timeline.style.opacity = '1';
+    
+    // Set initial state for timeline line
+    timelineLine.style.position = 'absolute';
+    timelineLine.style.top = '0';
+    timelineLine.style.left = '50%';
+    timelineLine.style.width = '4px';
+    timelineLine.style.backgroundColor = 'var(--primary-color)';
+    timelineLine.style.transform = 'translateX(-50%)';
+    timelineLine.style.transition = 'height 0.5s ease-out';
     timelineLine.style.height = '0';
     
-    // Animate timeline on scroll
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Animate timeline line
-                timelineLine.style.transition = 'height 2s ease-in-out';
-                timelineLine.style.height = '100%';
-                
-                // Animate milestones
-                milestones.forEach((milestone, index) => {
-                    setTimeout(() => {
-                        milestone.style.opacity = '1';
-                        milestone.style.transform = 'translateY(0)';
-                    }, index * 300);
-                });
-                
-                // Disconnect observer after animation
-                observer.disconnect();
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    observer.observe(timeline);
-    
     // Set initial styles for milestones
-    milestones.forEach(milestone => {
+    milestones.forEach((milestone) => {
+        const content = milestone.querySelector('.milestone-content');
+        if (content) {
+            content.style.opacity = '1';
+            content.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        }
         milestone.style.opacity = '0';
         milestone.style.transform = 'translateY(20px)';
         milestone.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     });
+    
+    // Track which milestones have been animated
+    const animatedMilestones = new Set();
+    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    let isScrollingDown = true;
+    let rafId = null;
+    
+    // Track the last active milestone to prevent jumping
+    let lastActiveMilestone = null;
+    const SCROLL_THRESHOLD = 50; // Minimum pixels to scroll before updating active milestone
+    let lastScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Function to update timeline
+    function updateTimeline() {
+        if (rafId) {
+            window.cancelAnimationFrame(rafId);
+        }
+        
+        rafId = window.requestAnimationFrame(() => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollDelta = Math.abs(scrollTop - lastScrollPosition);
+            isScrollingDown = scrollTop > lastScrollTop;
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            
+            // Only update if scrolled a significant amount
+            if (scrollDelta < SCROLL_THRESHOLD && lastActiveMilestone) {
+                rafId = null;
+                return;
+            }
+            
+            lastScrollPosition = scrollTop;
+            
+            const viewportHeight = window.innerHeight;
+            const timelineRect = timeline.getBoundingClientRect();
+            
+            // Find the most centered milestone in the viewport
+            let activeMilestone = null;
+            let minDistanceToCenter = viewportHeight;
+            
+            milestones.forEach((milestone) => {
+                const rect = milestone.getBoundingClientRect();
+                const milestoneTop = rect.top;
+                const milestoneBottom = rect.bottom;
+                // Use a point lower in the viewport (70% down) to prioritize milestones in the lower half
+                const milestoneActivationPoint = milestoneTop + (milestoneBottom - milestoneTop) * 0.7;
+                const viewportActivationPoint = viewportHeight * 0.7; // 70% down the viewport
+                // Calculate distance to the activation point (lower in the viewport)
+                const distanceToActivation = Math.abs(milestoneActivationPoint - viewportActivationPoint);
+                
+                // Show/hide milestone based on scroll position
+                const isVisible = milestoneTop < viewportHeight * 0.8 && milestoneBottom > viewportHeight * 0.2;
+                const isAboveViewport = milestoneBottom < viewportHeight * 0.2;
+                const isBelowViewport = milestoneTop > viewportHeight * 0.8;
+                
+                // Always update visibility
+                if (isVisible || (isScrollingDown && isAboveViewport)) {
+                    milestone.style.opacity = '1';
+                    milestone.style.transform = 'translateY(0)';
+                    animatedMilestones.add(milestone);
+                    
+                    // Find the milestone closest to the center of the viewport
+                    if (distanceToActivation < minDistanceToCenter) {
+                        minDistanceToCenter = distanceToActivation;
+                        activeMilestone = milestone;
+                    }
+                } else if (!isScrollingDown && isBelowViewport) {
+                    milestone.style.opacity = '0';
+                    milestone.style.transform = 'translateY(20px)';
+                }
+            });
+            
+            // Update timeline line height
+            if (activeMilestone) {
+                const rect = activeMilestone.getBoundingClientRect();
+                const lineHeight = rect.top + rect.height / 2 - timelineRect.top;
+                timelineLine.style.height = `${Math.max(0, lineHeight)}px`;
+            }
+            
+            rafId = null;
+        });
+    }
+    
+    // Initial animation for the first few items
+    setTimeout(() => {
+        // Animate the first 2 items on load
+        const initialItems = 2;
+        milestones.forEach((milestone, index) => {
+            if (index < initialItems) {
+                setTimeout(() => {
+                    milestone.style.opacity = '1';
+                    milestone.style.transform = 'translateY(0)';
+                    animatedMilestones.add(milestone);
+                }, 200 * index);
+            }
+        });
+        
+        // Initial timeline line height
+        if (milestones.length > 0) {
+            const firstMilestone = milestones[0];
+            const lastMilestone = milestones[Math.min(initialItems - 1, milestones.length - 1)];
+            const firstRect = firstMilestone.getBoundingClientRect();
+            const lastRect = lastMilestone.getBoundingClientRect();
+            
+            const lineHeight = lastRect.bottom - firstRect.top;
+            timelineLine.style.transition = 'height 1s ease-out';
+            timelineLine.style.height = `${lineHeight}px`;
+        }
+    }, 300);
+    
+    // Set up scroll listener with debounce
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                updateTimeline();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+    
+    // Handle window resize
+    window.addEventListener('resize', updateTimeline);
+    
+    // Initial update
+    updateTimeline();
+    
+    // Clean up function
+    return () => {
+        window.removeEventListener('scroll', updateTimeline);
+        window.removeEventListener('resize', updateTimeline);
+        if (rafId) {
+            window.cancelAnimationFrame(rafId);
+        }
+    };
 }
 
 // Update IB Progress
