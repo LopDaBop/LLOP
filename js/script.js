@@ -637,15 +637,15 @@ function initializeBankSection() {
             title: 'Roblox Game Development',
             description: 'Create and sell Roblox games and scripts on Fiverr and Discord.',
             platforms: ['Fiverr', 'Discord'],
-            estimatedEarnings: '€500-2000/month',
-            status: 'Active'
+            estimatedEarnings: '€50-200/job',
+            status: 'Inactive'
         },
         {
             title: 'Web Development',
             description: 'Develop simple static websites for small businesses and individuals.',
             platforms: ['Fiverr', 'Reddit', 'Discord'],
-            estimatedEarnings: '€300-1500/month',
-            status: 'Active'
+            estimatedEarnings: '€20-100/job',
+            status: 'Planning'
         },
         {
             title: 'Language Tutoring',
@@ -658,7 +658,7 @@ function initializeBankSection() {
             title: 'RV Rental',
             description: 'Rent out RV for €130/day with minimum 7-day rental.',
             platforms: ['Local Listings', 'RV Share'],
-            estimatedEarnings: '€910+/month',
+            estimatedEarnings: '€700+/Rental',
             status: 'Planning'
         }
     ];
@@ -699,12 +699,17 @@ function initializeBusinessSection() {
             projects: [
                 {
                     name: 'pro.J- UnfilteredReality',
-                    description: 'A platform for authentic content and discussions.',
-                    status: 'Planning'
+                    description: 'A podcast for Information overload and revealing the truth.',
+                    status: 'Active'
                 },
                 {
                     name: 'pro.J- LLop [Spotify]',
                     description: 'Music production and distribution on Spotify.',
+                    status: 'Planning'
+                },
+                {
+                    name: 'IB SideQuestGroups',
+                    description: 'Community groups for IB students in Tartu.',
                     status: 'Active'
                 }
             ]
@@ -714,14 +719,9 @@ function initializeBusinessSection() {
             title: 'In Progress',
             projects: [
                 {
-                    name: 'ib ias essays',
-                    description: 'IB Internal Assessment and Extended Essay services.',
-                    status: 'Active'
-                },
-                {
-                    name: 'ib unofficial groups',
-                    description: 'Community groups for IB students.',
-                    status: 'Active'
+                    name: 'IB Personal Tasks [Not a service]',
+                    description: 'complete IB Internal Assessment and Extended Essay.',
+                    status: 'Planning'
                 },
                 {
                     name: 'ib clubideas [game dev club]',
@@ -737,27 +737,27 @@ function initializeBusinessSection() {
                 {
                     name: 'pro.J- LLop merch',
                     description: 'Merchandise line for LLop brand.',
-                    status: 'Planning'
+                    status: 'Idea'
                 },
                 {
                     name: 'pro.J-Cinimatography [if god; YT]',
                     description: 'YouTube channel for cinematography content.',
-                    status: 'Planning'
+                    status: 'Idea'
                 },
                 {
                     name: 'pro.J Live',
                     description: 'Live streaming and content creation.',
-                    status: 'Planning'
+                    status: 'Idea'
                 },
                 {
                     name: 'pro.J [Web] Online shop',
-                    description: 'E-commerce platform for LLOP merchandise.',
-                    status: 'Planning'
+                    description: 'E-commerce platform.',
+                    status: 'Idea'
                 },
                 {
                     name: 'pro.J [Web] personal port',
                     description: 'Personal portfolio website.',
-                    status: 'Active'
+                    status: 'Idea'
                 }
             ]
         }
