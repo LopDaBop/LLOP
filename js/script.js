@@ -638,28 +638,28 @@ function initializeBankSection() {
             description: 'Create and sell Roblox games and scripts on Fiverr and Discord.',
             platforms: ['Fiverr', 'Discord'],
             estimatedEarnings: '€50-200/job',
-            status: 'Inactive'
+            status: 'Planning'
         },
         {
             title: 'Web Development',
             description: 'Develop simple static websites for small businesses and individuals.',
             platforms: ['Fiverr', 'Reddit', 'Discord'],
             estimatedEarnings: '€20-100/job',
-            status: 'Planning'
+            status: 'Activating..'
         },
         {
             title: 'Language Tutoring',
             description: 'Teach native languages on platforms like Preply or Cambly.',
             platforms: ['Preply', 'Cambly'],
             estimatedEarnings: '€10-30/hour',
-            status: 'Planning'
+            status: 'Inactive'
         },
         {
             title: 'RV Rental',
             description: 'Rent out RV for €130/day with minimum 7-day rental.',
             platforms: ['Local Listings', 'RV Share'],
             estimatedEarnings: '€700+/Rental',
-            status: 'Planning'
+            status: 'Inactive'
         }
     ];
     
