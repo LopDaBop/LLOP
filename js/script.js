@@ -710,7 +710,17 @@ function initializeBusinessSection() {
                 {
                     name: 'IB SideQuestGroups',
                     description: 'Community groups for IB students in Tartu.',
-                    status: 'Active'
+                    status: 'Complete'
+                },
+                {
+                    name: 'pro.J- LLop Shop',
+                    description: 'Merchandise line for LLop shop [simple online shop].',
+                    status: 'Idea'
+                },
+                {
+                    name: 'pro.J-Cinimatography [if god; YT]',
+                    description: 'YouTube channel for cinematography content.',
+                    status: 'Planning'
                 }
             ]
         },
@@ -735,22 +745,12 @@ function initializeBusinessSection() {
             title: 'Iced',
             projects: [
                 {
-                    name: 'pro.J- LLop merch',
-                    description: 'Merchandise line for LLop brand.',
-                    status: 'Idea'
-                },
-                {
-                    name: 'pro.J-Cinimatography [if god; YT]',
-                    description: 'YouTube channel for cinematography content.',
-                    status: 'Idea'
-                },
-                {
                     name: 'pro.J Live',
                     description: 'Live streaming and content creation.',
                     status: 'Idea'
                 },
                 {
-                    name: 'pro.J [Web] Online shop',
+                    name: 'pro.J [Web] Online RedirectShop',
                     description: 'E-commerce platform.',
                     status: 'Idea'
                 },
