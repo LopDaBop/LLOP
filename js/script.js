@@ -703,11 +703,6 @@ function initializeBusinessSection() {
                     status: 'Active'
                 },
                 {
-                    name: 'pro.J- LLop [Spotify]',
-                    description: 'Music production and distribution on Spotify.',
-                    status: 'Planning'
-                },
-                {
                     name: 'IB SideQuestGroups',
                     description: 'Community groups for IB students in Tartu.',
                     status: 'Complete'
@@ -731,6 +726,11 @@ function initializeBusinessSection() {
                 {
                     name: 'IB Personal Tasks [Not a service]',
                     description: 'complete IB Internal Assessment and Extended Essay.',
+                    status: 'Planning'
+                },
+                {
+                    name: 'pro.J- LLop [Spotify]',
+                    description: 'Music production and distribution on Spotify.',
                     status: 'Planning'
                 },
                 {
